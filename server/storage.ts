@@ -52,9 +52,21 @@ export class MemStorage implements IStorage {
       ...movement, 
       id, 
       isPolestar: 0,
+      // Handle optional fields with proper defaults
       thumbnailUrl: movement.thumbnailUrl || null,
       description: movement.description || null,
-      duration: movement.duration || null
+      duration: movement.duration || null,
+      breathingPattern: movement.breathingPattern || null,
+      // Ensure arrays are properly initialized
+      tags: movement.tags || [],
+      benefits: movement.benefits || [],
+      contraindications: movement.contraindications || [],
+      modifications: movement.modifications || [],
+      equipment: movement.equipment || [],
+      muscleGroups: movement.muscleGroups || [],
+      instructions: movement.instructions || [],
+      precautions: movement.precautions || [],
+      precautionLevel: movement.precautionLevel || 'Low',
     };
     this.movements.set(id, newMovement);
     return newMovement;
@@ -89,7 +101,7 @@ export class MemStorage implements IStorage {
       id, 
       createdAt: new Date(),
       notes: classData.notes || null,
-      sequence: classData.sequence || []
+      sequence: (classData.sequence || []) as string[]
     };
     this.classes.set(id, newClass);
     return newClass;
@@ -99,7 +111,11 @@ export class MemStorage implements IStorage {
     const existing = this.classes.get(id);
     if (!existing) return undefined;
     
-    const updated = { ...existing, ...classData };
+    const updated = { 
+      ...existing, 
+      ...classData,
+      sequence: classData.sequence ? (classData.sequence as string[]) : existing.sequence
+    };
     this.classes.set(id, updated);
     return updated;
   }
