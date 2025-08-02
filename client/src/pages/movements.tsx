@@ -7,6 +7,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { ArrowLeft, Search, Plus } from "lucide-react";
 import MovementCard from "@/components/movement-card";
 import MovementDetailModal from "@/components/movement-detail-modal";
+import AddMovementModal from "@/components/add-movement-modal";
 import { Movement } from "@shared/schema";
 
 export default function MovementsPage() {
@@ -16,6 +17,7 @@ export default function MovementsPage() {
   const [precautionFilter, setPrecautionFilter] = useState("all");
   const [tagFilter, setTagFilter] = useState("all");
   const [selectedMovement, setSelectedMovement] = useState<Movement | null>(null);
+  const [showAddModal, setShowAddModal] = useState(false);
 
   const { data: movements = [], isLoading } = useQuery<Movement[]>({
     queryKey: ["/api/movements"],
@@ -60,7 +62,10 @@ export default function MovementsPage() {
             <h1 className="text-3xl font-bold ios-gray-dark">Movement Library</h1>
           </div>
           
-          <Button className="bg-ios-green hover:bg-green-600">
+          <Button 
+            className="bg-ios-green hover:bg-green-600"
+            onClick={() => setShowAddModal(true)}
+          >
             <Plus className="w-4 h-4 mr-2" />
             Add Movement
           </Button>
@@ -183,6 +188,11 @@ export default function MovementsPage() {
         movement={selectedMovement}
         isOpen={!!selectedMovement}
         onClose={() => setSelectedMovement(null)}
+      />
+
+      <AddMovementModal
+        isOpen={showAddModal}
+        onClose={() => setShowAddModal(false)}
       />
     </div>
   );
