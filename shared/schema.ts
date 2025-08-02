@@ -37,6 +37,17 @@ export const classes = pgTable("classes", {
   createdAt: timestamp("created_at").defaultNow(),
 });
 
+export const templates = pgTable("templates", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  name: text("name").notNull(),
+  description: text("description"),
+  level: text("level").notNull(),
+  duration: integer("duration").notNull(),
+  sequence: jsonb("sequence").$type<string[]>(),
+  tags: text("tags").array(),
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
 export const insertMovementSchema = createInsertSchema(movements).omit({
   id: true,
   isPolestar: true,
@@ -47,7 +58,14 @@ export const insertClassSchema = createInsertSchema(classes).omit({
   createdAt: true,
 });
 
+export const insertTemplateSchema = createInsertSchema(templates).omit({
+  id: true,
+  createdAt: true,
+});
+
 export type InsertMovement = z.infer<typeof insertMovementSchema>;
 export type Movement = typeof movements.$inferSelect;
 export type InsertClass = z.infer<typeof insertClassSchema>;
 export type Class = typeof classes.$inferSelect;
+export type InsertTemplate = z.infer<typeof insertTemplateSchema>;
+export type Template = typeof templates.$inferSelect;
