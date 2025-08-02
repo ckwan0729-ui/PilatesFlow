@@ -13,6 +13,8 @@ export default function MovementsPage() {
   const [searchTerm, setSearchTerm] = useState("");
   const [categoryFilter, setCategoryFilter] = useState("all");
   const [levelFilter, setLevelFilter] = useState("all");
+  const [precautionFilter, setPrecautionFilter] = useState("all");
+  const [tagFilter, setTagFilter] = useState("all");
   const [selectedMovement, setSelectedMovement] = useState<Movement | null>(null);
 
   const { data: movements = [], isLoading } = useQuery<Movement[]>({
@@ -21,15 +23,20 @@ export default function MovementsPage() {
 
   const filteredMovements = movements.filter(movement => {
     const matchesSearch = movement.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         movement.category.toLowerCase().includes(searchTerm.toLowerCase());
+                         movement.category.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                         (movement.tags && movement.tags.some(tag => tag.toLowerCase().includes(searchTerm.toLowerCase())));
     const matchesCategory = categoryFilter === "all" || movement.category === categoryFilter;
     const matchesLevel = levelFilter === "all" || movement.level === levelFilter;
+    const matchesPrecaution = precautionFilter === "all" || movement.precautionLevel === precautionFilter;
+    const matchesTag = tagFilter === "all" || (movement.tags && movement.tags.includes(tagFilter));
     
-    return matchesSearch && matchesCategory && matchesLevel;
+    return matchesSearch && matchesCategory && matchesLevel && matchesPrecaution && matchesTag;
   });
 
   const categories = [...new Set(movements.map(m => m.category))];
   const levels = [...new Set(movements.map(m => m.level))];
+  const precautionLevels = [...new Set(movements.map(m => m.precautionLevel))];
+  const allTags = [...new Set(movements.flatMap(m => m.tags || []))].sort();
 
   if (isLoading) {
     return (
@@ -63,39 +70,92 @@ export default function MovementsPage() {
       <div className="p-6">
         {/* Search and Filters */}
         <div className="bg-white rounded-xl shadow-sm p-4 mb-6">
-          <div className="flex items-center space-x-4">
-            <div className="flex-1 relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 ios-gray" />
-              <Input
-                type="text"
-                placeholder="Search movements..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="pl-10"
-              />
+          <div className="space-y-4">
+            {/* Main Search */}
+            <div className="flex items-center space-x-4">
+              <div className="flex-1 relative">
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 ios-gray" />
+                <Input
+                  type="text"
+                  placeholder="Search movements, categories, or tags..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="pl-10"
+                />
+              </div>
+              <div className="text-sm ios-gray">
+                {filteredMovements.length} of {movements.length} movements
+              </div>
             </div>
-            <Select value={categoryFilter} onValueChange={setCategoryFilter}>
-              <SelectTrigger className="w-48">
-                <SelectValue placeholder="All Categories" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All Categories</SelectItem>
-                {categories.map(category => (
-                  <SelectItem key={category} value={category}>{category}</SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-            <Select value={levelFilter} onValueChange={setLevelFilter}>
-              <SelectTrigger className="w-48">
-                <SelectValue placeholder="All Levels" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All Levels</SelectItem>
-                {levels.map(level => (
-                  <SelectItem key={level} value={level}>{level}</SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+
+            {/* Filter Row */}
+            <div className="flex items-center space-x-3 flex-wrap gap-y-2">
+              <Select value={categoryFilter} onValueChange={setCategoryFilter}>
+                <SelectTrigger className="w-40">
+                  <SelectValue placeholder="Category" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All Categories</SelectItem>
+                  {categories.map(category => (
+                    <SelectItem key={category} value={category}>{category}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+
+              <Select value={levelFilter} onValueChange={setLevelFilter}>
+                <SelectTrigger className="w-36">
+                  <SelectValue placeholder="Level" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All Levels</SelectItem>
+                  {levels.map(level => (
+                    <SelectItem key={level} value={level}>{level}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+
+              <Select value={precautionFilter} onValueChange={setPrecautionFilter}>
+                <SelectTrigger className="w-36">
+                  <SelectValue placeholder="Risk Level" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All Risk Levels</SelectItem>
+                  {precautionLevels.map(level => (
+                    <SelectItem key={level} value={level}>{level} Risk</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+
+              <Select value={tagFilter} onValueChange={setTagFilter}>
+                <SelectTrigger className="w-40">
+                  <SelectValue placeholder="Tags" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All Tags</SelectItem>
+                  {allTags.map(tag => (
+                    <SelectItem key={tag} value={tag}>{tag}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+
+              {/* Clear Filters */}
+              {(categoryFilter !== "all" || levelFilter !== "all" || precautionFilter !== "all" || tagFilter !== "all" || searchTerm) && (
+                <Button 
+                  variant="outline" 
+                  size="sm"
+                  onClick={() => {
+                    setCategoryFilter("all");
+                    setLevelFilter("all");
+                    setPrecautionFilter("all");
+                    setTagFilter("all");
+                    setSearchTerm("");
+                  }}
+                  className="ios-blue border-ios-blue hover:bg-ios-blue hover:text-white"
+                >
+                  Clear Filters
+                </Button>
+              )}
+            </div>
           </div>
         </div>
 

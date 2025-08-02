@@ -15,6 +15,14 @@ export const movements = pgTable("movements", {
   duration: text("duration"),
   thumbnailUrl: text("thumbnail_url"),
   isPolestar: integer("is_polestar").default(0),
+  // Enhanced fields
+  tags: text("tags").array(),
+  benefits: text("benefits").array(),
+  contraindications: text("contraindications").array(),
+  modifications: text("modifications").array(),
+  equipment: text("equipment").array(),
+  muscleGroups: text("muscle_groups").array(),
+  breathingPattern: text("breathing_pattern"),
 });
 
 export const classes = pgTable("classes", {
