@@ -1,4 +1,4 @@
-import { type Movement, type InsertMovement, type Class, type InsertClass } from "@shared/schema";
+import { type Movement, type InsertMovement, type Class, type InsertClass, type Template, type InsertTemplate } from "@shared/schema";
 import { randomUUID } from "crypto";
 import { sampleMovements } from "../client/src/lib/sample-movements";
 
@@ -17,15 +17,24 @@ export interface IStorage {
   updateClass(id: string, classData: Partial<InsertClass>): Promise<Class | undefined>;
   deleteClass(id: string): Promise<boolean>;
   getClassesByDate(date: string): Promise<Class[]>;
+
+  // Template operations
+  getTemplates(): Promise<Template[]>;
+  getTemplate(id: string): Promise<Template | undefined>;
+  createTemplate(template: InsertTemplate): Promise<Template>;
+  updateTemplate(id: string, template: Partial<InsertTemplate>): Promise<Template | undefined>;
+  deleteTemplate(id: string): Promise<boolean>;
 }
 
 export class MemStorage implements IStorage {
   private movements: Map<string, Movement>;
   private classes: Map<string, Class>;
+  private templates: Map<string, Template>;
 
   constructor() {
     this.movements = new Map();
     this.classes = new Map();
+    this.templates = new Map();
     this.initializeSampleData();
   }
 
@@ -126,6 +135,46 @@ export class MemStorage implements IStorage {
 
   async getClassesByDate(date: string): Promise<Class[]> {
     return Array.from(this.classes.values()).filter(c => c.date === date);
+  }
+
+  // Template operations
+  async getTemplates(): Promise<Template[]> {
+    return Array.from(this.templates.values());
+  }
+
+  async getTemplate(id: string): Promise<Template | undefined> {
+    return this.templates.get(id);
+  }
+
+  async createTemplate(template: InsertTemplate): Promise<Template> {
+    const id = randomUUID();
+    const newTemplate: Template = { 
+      ...template, 
+      id, 
+      createdAt: new Date(),
+      sequence: (template.sequence || []) as string[],
+      tags: template.tags || []
+    };
+    this.templates.set(id, newTemplate);
+    return newTemplate;
+  }
+
+  async updateTemplate(id: string, template: Partial<InsertTemplate>): Promise<Template | undefined> {
+    const existing = this.templates.get(id);
+    if (!existing) return undefined;
+    
+    const updated = { 
+      ...existing, 
+      ...template,
+      sequence: template.sequence ? (template.sequence as string[]) : existing.sequence,
+      tags: template.tags ? template.tags : existing.tags
+    };
+    this.templates.set(id, updated);
+    return updated;
+  }
+
+  async deleteTemplate(id: string): Promise<boolean> {
+    return this.templates.delete(id);
   }
 }
 

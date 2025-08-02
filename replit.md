@@ -1,6 +1,6 @@
 # Overview
 
-This is a full-stack Pilates class management application built with React and Express. The application allows users to create and schedule Pilates classes, manage a library of Pilates movements, and build class sequences. It features a calendar interface for viewing and organizing classes, and a comprehensive movement database with filtering and search capabilities.
+This is a full-stack Pilates class management application built with React and Express. The application allows users to create and schedule Pilates classes, manage a library of Pilates movements, and build class sequences. It features a calendar interface for viewing and organizing classes, a comprehensive movement database with advanced filtering and search capabilities, and a template system for saving and reusing class configurations.
 
 # User Preferences
 
@@ -32,6 +32,7 @@ Preferred communication style: Simple, everyday language.
 ## Database Schema Design
 - **Movements Table**: Stores Pilates exercises with categorization, difficulty levels, instructions, and safety precautions
 - **Classes Table**: Stores scheduled classes with metadata and movement sequences stored as JSON arrays
+- **Templates Table**: Stores reusable class templates with sequences, tags, and metadata for quick class creation
 - **Validation**: Zod schemas for runtime type checking and API validation
 
 ## Development and Build Configuration

@@ -5,12 +5,17 @@ import { Button } from "@/components/ui/button";
 import { Dumbbell, Plus, ChevronLeft, ChevronRight } from "lucide-react";
 import CalendarGrid from "@/components/calendar-grid";
 import ClassModal from "@/components/class-modal";
+import SaveTemplateModal from "@/components/save-template-modal";
+import TemplateSelectionModal from "@/components/template-selection-modal";
 import { Class } from "@shared/schema";
 
 export default function CalendarPage() {
   const [currentDate, setCurrentDate] = useState(new Date());
   const [selectedClass, setSelectedClass] = useState<Class | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [showTemplateModal, setShowTemplateModal] = useState(false);
+  const [showTemplateSelection, setShowTemplateSelection] = useState(false);
+  const [templateForNewClass, setTemplateForNewClass] = useState<any>(null);
 
   const { data: classes = [], isLoading } = useQuery<Class[]>({
     queryKey: ["/api/classes"],
@@ -30,12 +35,37 @@ export default function CalendarPage() {
 
   const handleCreateClass = () => {
     setSelectedClass(null);
+    setTemplateForNewClass(null);
+    setShowTemplateSelection(true);
+  };
+
+  const handleCreateFromTemplate = (template: any) => {
+    if (template) {
+      setTemplateForNewClass(template);
+    } else {
+      setTemplateForNewClass(null);
+    }
+    setSelectedClass(null);
     setIsModalOpen(true);
+    setShowTemplateSelection(false);
+  };
+
+  const handleCreateFromScratch = () => {
+    setTemplateForNewClass(null);
+    setSelectedClass(null);
+    setIsModalOpen(true);
+    setShowTemplateSelection(false);
   };
 
   const handleEditClass = (classData: Class) => {
     setSelectedClass(classData);
+    setTemplateForNewClass(null);
     setIsModalOpen(true);
+  };
+
+  const handleSaveAsTemplate = (classData: Class) => {
+    setSelectedClass(classData);
+    setShowTemplateModal(true);
   };
 
   const monthYear = currentDate.toLocaleDateString('en-US', { 
@@ -128,6 +158,20 @@ export default function CalendarPage() {
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         classData={selectedClass}
+        templateData={templateForNewClass}
+        onSaveAsTemplate={handleSaveAsTemplate}
+      />
+
+      <TemplateSelectionModal
+        isOpen={showTemplateSelection}
+        onClose={() => setShowTemplateSelection(false)}
+        onSelectTemplate={handleCreateFromTemplate}
+      />
+
+      <SaveTemplateModal
+        isOpen={showTemplateModal}
+        onClose={() => setShowTemplateModal(false)}
+        sourceClass={selectedClass}
       />
     </div>
   );
