@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -9,7 +9,7 @@ import { Badge } from "@/components/ui/badge";
 import { X, Plus } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
-import { Class, InsertTemplate } from "@shared/schema";
+import { Class, InsertTemplate, Movement } from "@shared/schema";
 
 interface SaveTemplateModalProps {
   isOpen: boolean;
@@ -20,6 +20,10 @@ interface SaveTemplateModalProps {
 export default function SaveTemplateModal({ isOpen, onClose, sourceClass }: SaveTemplateModalProps) {
   const { toast } = useToast();
   const queryClient = useQueryClient();
+  
+  const { data: movements = [] } = useQuery<Movement[]>({
+    queryKey: ["/api/movements"],
+  });
   
   const [templateData, setTemplateData] = useState<InsertTemplate>({
     name: "",
@@ -104,7 +108,7 @@ export default function SaveTemplateModal({ isOpen, onClose, sourceClass }: Save
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-2xl">
+      <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle className="text-xl font-bold ios-gray-dark">
             Save as Template
@@ -205,14 +209,17 @@ export default function SaveTemplateModal({ isOpen, onClose, sourceClass }: Save
             <div className="bg-gray-50 rounded-lg p-4 max-h-32 overflow-y-auto">
               {sourceClass.sequence && sourceClass.sequence.length > 0 ? (
                 <div className="space-y-1">
-                  {sourceClass.sequence.map((movementId, index) => (
-                    <div key={index} className="flex items-center space-x-2 text-sm">
-                      <span className="w-6 h-6 bg-ios-blue text-white rounded-full flex items-center justify-center text-xs font-semibold">
-                        {index + 1}
-                      </span>
-                      <span className="ios-gray">Movement {movementId}</span>
-                    </div>
-                  ))}
+                  {sourceClass.sequence.map((movementId, index) => {
+                    const movement = movements.find(m => m.id === movementId);
+                    return (
+                      <div key={index} className="flex items-center space-x-2 text-sm">
+                        <span className="w-6 h-6 bg-ios-blue text-white rounded-full flex items-center justify-center text-xs font-semibold">
+                          {index + 1}
+                        </span>
+                        <span className="ios-gray">{movement?.name || `Movement ${movementId}`}</span>
+                      </div>
+                    );
+                  })}
                 </div>
               ) : (
                 <p className="text-sm ios-gray text-center">No movements in sequence</p>
