@@ -16,9 +16,11 @@ interface ClassModalProps {
   isOpen: boolean;
   onClose: () => void;
   classData: Class | null;
+  templateData?: any;
+  onSaveAsTemplate?: (classData: Class) => void;
 }
 
-export default function ClassModal({ isOpen, onClose, classData }: ClassModalProps) {
+export default function ClassModal({ isOpen, onClose, classData, templateData, onSaveAsTemplate }: ClassModalProps) {
   const { toast } = useToast();
   const queryClient = useQueryClient();
   
@@ -47,6 +49,18 @@ export default function ClassModal({ isOpen, onClose, classData }: ClassModalPro
         notes: classData.notes || "",
         sequence: classData.sequence || []
       });
+    } else if (templateData) {
+      // Initialize with template data
+      const today = new Date();
+      setFormData({
+        title: templateData.name || "",
+        date: today.toISOString().split('T')[0],
+        startTime: "09:00",
+        duration: templateData.duration || 60,
+        level: templateData.level || "All Levels",
+        notes: templateData.description || "",
+        sequence: templateData.sequence || []
+      });
     } else {
       // Reset form for new class
       const today = new Date();
@@ -60,7 +74,7 @@ export default function ClassModal({ isOpen, onClose, classData }: ClassModalPro
         sequence: []
       });
     }
-  }, [classData, isOpen]);
+  }, [classData, templateData, isOpen]);
 
   const createMutation = useMutation({
     mutationFn: async (data: typeof formData) => {
@@ -109,13 +123,35 @@ export default function ClassModal({ isOpen, onClose, classData }: ClassModalPro
   const handleCopyClass = () => {
     if (!classData) return;
     
-    const newFormData = {
-      ...formData,
+    const newClassData = {
       title: `${formData.title} (Copy)`,
-      date: new Date().toISOString().split('T')[0]
+      date: new Date().toISOString().split('T')[0],
+      startTime: formData.startTime,
+      duration: formData.duration,
+      level: formData.level,
+      notes: formData.notes,
+      sequence: formData.sequence
     };
-    setFormData(newFormData);
-    toast({ title: "Class copied - modify details as needed" });
+    
+    // Create the copy immediately
+    createMutation.mutate(newClassData);
+    toast({ title: "Class copied successfully!" });
+  };
+
+  const handleSaveAsTemplate = () => {
+    if (!classData || !onSaveAsTemplate) return;
+    
+    // Create a class object with current form data
+    const currentClassData = {
+      ...classData,
+      title: formData.title,
+      duration: formData.duration,
+      level: formData.level,
+      notes: formData.notes,
+      sequence: formData.sequence
+    };
+    
+    onSaveAsTemplate(currentClassData);
   };
 
   const formatDateTime = () => {
@@ -160,10 +196,18 @@ export default function ClassModal({ isOpen, onClose, classData }: ClassModalPro
             </div>
             <div className="flex items-center space-x-2">
               {classData && (
-                <Button variant="outline" onClick={handleCopyClass} className="ios-blue border-ios-blue">
-                  <Copy className="w-4 h-4 mr-2" />
-                  Copy Class
-                </Button>
+                <>
+                  <Button variant="outline" onClick={handleCopyClass} className="ios-blue border-ios-blue">
+                    <Copy className="w-4 h-4 mr-2" />
+                    Copy Class
+                  </Button>
+                  {onSaveAsTemplate && (
+                    <Button variant="outline" onClick={handleSaveAsTemplate} className="ios-green border-ios-green">
+                      <Save className="w-4 h-4 mr-2" />
+                      Save as Template
+                    </Button>
+                  )}
+                </>
               )}
               <Button 
                 onClick={handleSubmit}
