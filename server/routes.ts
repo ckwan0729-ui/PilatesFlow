@@ -3,7 +3,7 @@ import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { insertMovementSchema, insertClassSchema, insertTemplateSchema } from "@shared/schema";
 import { z } from "zod";
-import multer from "multer";
+import * as multer from "multer";
 import path from "path";
 import { fileURLToPath } from 'url';
 
