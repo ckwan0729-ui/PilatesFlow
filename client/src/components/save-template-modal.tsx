@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
@@ -87,7 +87,7 @@ export default function SaveTemplateModal({ isOpen, onClose, sourceClass }: Save
   };
 
   // Reset form when modal opens with new class data
-  useState(() => {
+  useEffect(() => {
     if (isOpen && sourceClass) {
       setTemplateData({
         name: `${sourceClass.title} Template`,
@@ -98,7 +98,7 @@ export default function SaveTemplateModal({ isOpen, onClose, sourceClass }: Save
         tags: []
       });
     }
-  });
+  }, [isOpen, sourceClass]);
 
   if (!sourceClass) return null;
 
