@@ -147,7 +147,7 @@ export default function AddMovementModal({ isOpen, onClose }: AddMovementModalPr
               />
             </div>
             <div>
-              <Label htmlFor="thumbnailUrl">Thumbnail URL</Label>
+              <Label htmlFor="thumbnailUrl">import photo</Label>
               <Input
                 id="thumbnailUrl"
                 value={formData.thumbnailUrl}
