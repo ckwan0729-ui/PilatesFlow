@@ -11,6 +11,7 @@ import { X, Plus, Trash2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
 import { InsertMovement } from "@shared/schema";
+import { FileUpload } from "@/components/ui/file-upload";
 
 interface AddMovementModalProps {
   isOpen: boolean;
@@ -48,6 +49,16 @@ export default function AddMovementModal({ isOpen, onClose }: AddMovementModalPr
   const [newModification, setNewModification] = useState("");
   const [newEquipment, setNewEquipment] = useState("");
   const [newMuscleGroup, setNewMuscleGroup] = useState("");
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+
+  const uploadMutation = useMutation({
+    mutationFn: async (file: File) => {
+      const formData = new FormData();
+      formData.append('photo', file);
+      const response = await apiRequest("POST", "/api/upload", formData);
+      return response.json();
+    }
+  });
 
   const createMutation = useMutation({
     mutationFn: async (data: InsertMovement) => {
@@ -92,15 +103,33 @@ export default function AddMovementModal({ isOpen, onClose }: AddMovementModalPr
     setNewModification("");
     setNewEquipment("");
     setNewMuscleGroup("");
+    setSelectedFile(null);
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!formData.name.trim() || !formData.category || !formData.level) {
       toast({ title: "Please fill in all required fields", variant: "destructive" });
       return;
     }
-    createMutation.mutate(formData);
+
+    try {
+      let thumbnailUrl = formData.thumbnailUrl;
+      
+      // Upload file if selected
+      if (selectedFile) {
+        const uploadResult = await uploadMutation.mutateAsync(selectedFile);
+        thumbnailUrl = uploadResult.thumbnailUrl;
+      }
+
+      // Create movement with uploaded image URL
+      createMutation.mutate({
+        ...formData,
+        thumbnailUrl
+      });
+    } catch (error) {
+      toast({ title: "Failed to upload image", variant: "destructive" });
+    }
   };
 
   const addListItem = (field: keyof InsertMovement, value: string, setter: (value: string) => void) => {
@@ -147,12 +176,10 @@ export default function AddMovementModal({ isOpen, onClose }: AddMovementModalPr
               />
             </div>
             <div>
-              <Label htmlFor="thumbnailUrl">Thumbnail URL</Label>
-              <Input
-                id="thumbnailUrl"
-                value={formData.thumbnailUrl}
-                onChange={(e) => setFormData({...formData, thumbnailUrl: e.target.value})}
-                placeholder="https://example.com/image.jpg"
+              <FileUpload
+                onFileSelect={setSelectedFile}
+                currentImageUrl={formData.thumbnailUrl || undefined}
+                label="import photo"
               />
             </div>
           </div>
@@ -204,7 +231,7 @@ export default function AddMovementModal({ isOpen, onClose }: AddMovementModalPr
               <Label htmlFor="duration">Duration</Label>
               <Input
                 id="duration"
-                value={formData.duration}
+                value={formData.duration || ""}
                 onChange={(e) => setFormData({...formData, duration: e.target.value})}
                 placeholder="e.g., 3-5 minutes"
               />
@@ -213,7 +240,7 @@ export default function AddMovementModal({ isOpen, onClose }: AddMovementModalPr
               <Label htmlFor="breathingPattern">Breathing Pattern</Label>
               <Input
                 id="breathingPattern"
-                value={formData.breathingPattern}
+                value={formData.breathingPattern || ""}
                 onChange={(e) => setFormData({...formData, breathingPattern: e.target.value})}
                 placeholder="e.g., Exhale on effort, inhale on return"
               />
@@ -224,7 +251,7 @@ export default function AddMovementModal({ isOpen, onClose }: AddMovementModalPr
             <Label htmlFor="description">Description</Label>
             <Textarea
               id="description"
-              value={formData.description}
+              value={formData.description || ""}
               onChange={(e) => setFormData({...formData, description: e.target.value})}
               placeholder="Brief description of the movement"
               rows={3}
@@ -562,10 +589,10 @@ export default function AddMovementModal({ isOpen, onClose }: AddMovementModalPr
             </Button>
             <Button 
               type="submit" 
-              disabled={createMutation.isPending}
+              disabled={createMutation.isPending || uploadMutation.isPending}
               className="bg-ios-green hover:bg-green-600"
             >
-              {createMutation.isPending ? "Creating..." : "Create Movement"}
+              {uploadMutation.isPending ? "Uploading..." : createMutation.isPending ? "Creating..." : "Create Movement"}
             </Button>
           </div>
         </form>
