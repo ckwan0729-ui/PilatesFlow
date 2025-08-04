@@ -11,6 +11,7 @@ import {
   closestCenter,
   KeyboardSensor,
   PointerSensor,
+  TouchSensor,
   useSensor,
   useSensors,
   DragEndEvent
@@ -82,7 +83,7 @@ function SortableMovementItem({ movement, index, onRemove }: SortableMovementIte
     <div
       ref={setNodeRef}
       style={style}
-      className="sequence-item bg-white rounded-lg p-4 shadow-sm border border-gray-200 flex items-center space-x-4"
+      className="sequence-item bg-white rounded-lg p-4 shadow-sm border border-gray-200 flex items-center space-x-4 touch-manipulation"
     >
       <div className="flex items-center space-x-3 flex-1">
         <div className="w-8 h-8 bg-ios-blue text-white rounded-full flex items-center justify-center text-sm font-semibold">
@@ -106,15 +107,19 @@ function SortableMovementItem({ movement, index, onRemove }: SortableMovementIte
         </div>
       </div>
       <div className="flex items-center space-x-2">
-        <Button 
-          variant="ghost" 
-          size="sm" 
-          className="p-2 ios-gray hover:text-ios-blue cursor-grab"
+        <div 
+          className="p-2 ios-gray hover:text-ios-blue cursor-grab touch-manipulation flex items-center justify-center"
           {...attributes} 
           {...listeners}
+          style={{ 
+            touchAction: 'none',
+            WebkitTouchCallout: 'none',
+            WebkitUserSelect: 'none',
+            userSelect: 'none'
+          }}
         >
           <GripVertical className="w-4 h-4" />
-        </Button>
+        </div>
         <Button 
           variant="ghost" 
           size="sm" 
@@ -139,7 +144,17 @@ export default function SequenceBuilder({
   const [categoryFilter, setCategoryFilter] = useState("all");
 
   const sensors = useSensors(
-    useSensor(PointerSensor),
+    useSensor(PointerSensor, {
+      activationConstraint: {
+        distance: 8,
+      },
+    }),
+    useSensor(TouchSensor, {
+      activationConstraint: {
+        delay: 200,
+        tolerance: 5,
+      },
+    }),
     useSensor(KeyboardSensor, {
       coordinateGetter: sortableKeyboardCoordinates,
     })
@@ -233,14 +248,17 @@ export default function SequenceBuilder({
               strategy={verticalListSortingStrategy}
             >
               <div className="space-y-3">
-                {movements.map((movement, index) => (
-                  <SortableMovementItem
-                    key={movement.id}
-                    movement={movement}
-                    index={index}
-                    onRemove={() => handleRemoveFromSequence(index)}
-                  />
-                ))}
+                {sequence.map((movementId, index) => {
+                  const movement = movements.find(m => m.id === movementId);
+                  return movement ? (
+                    <SortableMovementItem
+                      key={movement.id}
+                      movement={movement}
+                      index={index}
+                      onRemove={() => handleRemoveFromSequence(index)}
+                    />
+                  ) : null;
+                })}
               </div>
             </SortableContext>
           </DndContext>
