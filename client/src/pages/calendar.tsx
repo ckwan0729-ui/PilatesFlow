@@ -27,7 +27,7 @@ export default function CalendarPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [showTemplateModal, setShowTemplateModal] = useState(false);
   const [showTemplateSelection, setShowTemplateSelection] = useState(false);
-  const [templateForNewClass, setTemplateForNewClass] = useState<any>(null);
+  const [templateForNewClass, setTemplateForNewClass] = useState<Template | null>(null);
   const [viewMode, setViewMode] = useState<"month" | "week" | "list">("month");
 
   const { data: classes = [], isLoading } = useQuery<Class[]>({
@@ -59,7 +59,17 @@ export default function CalendarPage() {
   };
 
   const handleSaveAsTemplate = (classData: Class) => {
-    setTemplateForNewClass(classData);
+    const templateData: Template = {
+      id: "",
+      name: classData.title,
+      description: classData.description,
+      level: classData.level,
+      duration: Math.round((new Date(classData.endTime).getTime() - new Date(classData.startTime).getTime()) / (1000 * 60)),
+      sequence: classData.sequence,
+      tags: [],
+      createdAt: null
+    };
+    setTemplateForNewClass(templateData);
     setShowTemplateModal(true);
   };
 
@@ -94,7 +104,7 @@ export default function CalendarPage() {
           
           <div className="ml-6 flex items-center border rounded-md">
             <Button
-              variant={viewMode === "month" ? "subtle" : "ghost"}
+              variant={viewMode === "month" ? "secondary" : "ghost"}
               size="sm"
               className="px-3"
               onClick={() => setViewMode("month")}
@@ -103,7 +113,7 @@ export default function CalendarPage() {
               Month
             </Button>
             <Button
-              variant={viewMode === "week" ? "subtle" : "ghost"}
+              variant={viewMode === "week" ? "secondary" : "ghost"}
               size="sm"
               className="px-3"
               onClick={() => setViewMode("week")}
@@ -112,7 +122,7 @@ export default function CalendarPage() {
               Week
             </Button>
             <Button
-              variant={viewMode === "list" ? "subtle" : "ghost"}
+              variant={viewMode === "list" ? "secondary" : "ghost"}
               size="sm"
               className="px-3"
               onClick={() => setViewMode("list")}
@@ -174,14 +184,36 @@ export default function CalendarPage() {
       <SaveTemplateModal
         isOpen={showTemplateModal}
         onClose={() => setShowTemplateModal(false)}
-        classData={templateForNewClass}
+        sourceClass={selectedClass}
       />
 
       <TemplateSelectionModal
         isOpen={showTemplateSelection}
         onClose={() => setShowTemplateSelection(false)}
-        onSelect={(template) => {
-          setTemplateForNewClass(template);
+        onSelectTemplate={(template) => {
+          const now = new Date();
+          const endTime = new Date(now.getTime() + template.duration * 60000);
+          
+          const newClass: Partial<Class> = {
+            title: template.name,
+            description: template.description,
+            level: template.level,
+            sequence: template.sequence,
+            startTime: now,
+            endTime: endTime,
+            category: "Regular",
+            maxParticipants: null,
+            isRecurring: 0,
+            recurrencePattern: null,
+            recurrenceDays: [],
+            recurrenceEndDate: null,
+            instructorId: null,
+            roomLocation: null,
+            equipment: [],
+            notes: null
+          };
+          
+          setSelectedClass(newClass as Class);
           setShowTemplateSelection(false);
           setIsModalOpen(true);
         }}

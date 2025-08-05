@@ -1,6 +1,15 @@
 import { useState, useEffect } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Class, Movement } from "@shared/schema";
+      title: formData.title,
+      startTime: startDateTime.toISOString(),
+      endTime: endDateTime.toISOString(),
+      description: formData.description || "",
+      maxParticipants: formData.maxParticipants ? parseInt(formData.maxParticipants) : 0,
+      isRecurring: formData.isRecurring ? 1 : 0,
+      recurrencePattern: formData.recurrencePattern || "none",
+      recurrenceDays: formData.recurrenceDays || [],
+      recurrenceEndDate: formData.recurrenceEndDate ? new Date(formData.recurrenceEndDate).toISOString() : null,rom "@shared/schema";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -94,10 +103,7 @@ export default function ClassModal({ isOpen, onClose, classData, templateData, o
 
   const createMutation = useMutation({
     mutationFn: (newClass: Partial<Class>) => {
-      return apiRequest("/api/classes", {
-        method: "POST",
-        body: JSON.stringify(newClass),
-      });
+      return apiRequest("POST", "/api/classes", newClass);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/classes"] });
@@ -118,10 +124,7 @@ export default function ClassModal({ isOpen, onClose, classData, templateData, o
 
   const updateMutation = useMutation({
     mutationFn: (updatedClass: Partial<Class>) => {
-      return apiRequest(`/api/classes/${classData?.id}`, {
-        method: "PUT",
-        body: JSON.stringify(updatedClass),
-      });
+      return apiRequest("PUT", `/api/classes/${classData?.id}`, updatedClass);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/classes"] });
@@ -150,12 +153,12 @@ export default function ClassModal({ isOpen, onClose, classData, templateData, o
       title: formData.title,
       startTime: startDateTime.toISOString(),
       endTime: endDateTime.toISOString(),
-      description: formData.description,
-      maxParticipants: parseInt(formData.maxParticipants) || null,
+      description: formData.description || "",
+      maxParticipants: parseInt(formData.maxParticipants) || 0,
       isRecurring: formData.isRecurring ? 1 : 0,
-      recurrencePattern: formData.isRecurring ? formData.recurrencePattern : null,
-      recurrenceDays: formData.isRecurring ? formData.recurrenceDays : null,
-      recurrenceEndDate: formData.isRecurring ? new Date(formData.recurrenceEndDate).toISOString() : null,
+      recurrencePattern: formData.isRecurring ? formData.recurrencePattern : "none",
+      recurrenceDays: formData.recurrenceDays || [],
+      recurrenceEndDate: formData.recurrenceEndDate ? new Date(formData.recurrenceEndDate).toISOString() : null,
       level: formData.level,
       category: formData.category,
       roomLocation: formData.roomLocation,
