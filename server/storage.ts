@@ -110,7 +110,11 @@ export class MemStorage implements IStorage {
       id, 
       createdAt: new Date(),
       notes: classData.notes || null,
-      sequence: (classData.sequence || []) as string[]
+      sequence: (classData.sequence || []) as string[],
+      // Ensure `category` and `description` are always defined or null.
+      category: classData.category || null,
+      description: classData.description || null,
+      equipment: classData.equipment || null, // Ensure `equipment` is always defined or null
     };
     this.classes.set(id, newClass);
     return newClass;
@@ -153,7 +157,9 @@ export class MemStorage implements IStorage {
       id, 
       createdAt: new Date(),
       sequence: (template.sequence || []) as string[],
-      tags: template.tags || []
+      tags: template.tags || [],
+      // Ensure `description` is always defined or null.
+      description: template.description || null,
     };
     this.templates.set(id, newTemplate);
     return newTemplate;

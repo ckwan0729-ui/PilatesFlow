@@ -9,12 +9,12 @@ import { Badge } from "@/components/ui/badge";
 import { X, Plus } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
-import { Class, InsertTemplate, Movement } from "@shared/schema";
+import { ExtendedClass, InsertTemplate, Movement } from "@shared/schema";
 
 interface SaveTemplateModalProps {
   isOpen: boolean;
   onClose: () => void;
-  sourceClass: Class | null;
+  sourceClass: ExtendedClass | null;
 }
 
 export default function SaveTemplateModal({ isOpen, onClose, sourceClass }: SaveTemplateModalProps) {
@@ -105,6 +105,11 @@ export default function SaveTemplateModal({ isOpen, onClose, sourceClass }: Save
   }, [isOpen, sourceClass]);
 
   if (!sourceClass) return null;
+
+  const sourceClassWithDuration = {
+    ...sourceClass,
+    duration: sourceClass?.duration || 60,
+  };
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>

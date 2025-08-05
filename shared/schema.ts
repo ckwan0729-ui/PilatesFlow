@@ -80,3 +80,27 @@ export type InsertClass = z.infer<typeof insertClassSchema>;
 export type Class = typeof classes.$inferSelect;
 export type InsertTemplate = z.infer<typeof insertTemplateSchema>;
 export type Template = typeof templates.$inferSelect;
+
+// Update the `Class` type to include `duration`.
+export interface Class {
+  id: string;
+  title: string;
+  description: string | null;
+  category: string | null;
+  level: string;
+  equipment: string[] | null;
+  startTime: Date;
+  endTime: Date;
+  maxParticipants: number | null;
+  isRecurring: number | null;
+  recurrencePattern: string | null;
+  recurrenceDays: number[] | null;
+  recurrenceEndDate: Date | null;
+  createdAt: Date | null;
+  duration?: number; // Added optional duration property
+}
+
+// Rename the extended type to avoid conflicts.
+export type ExtendedClass = typeof classes.$inferSelect & {
+  duration?: number; // Added optional duration property
+};

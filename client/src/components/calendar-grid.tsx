@@ -112,7 +112,7 @@ export default function CalendarGrid({ currentDate, classes, onClassClick }: Cal
                     {classData.title}
                   </div>
                   <div className="text-white/90">
-                    {formatTime(classData.startTime)}
+                    {formatTime(classData.startTime.toISOString())}
                   </div>
                 </button>
               ))}

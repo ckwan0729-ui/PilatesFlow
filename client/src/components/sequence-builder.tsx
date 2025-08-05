@@ -197,7 +197,7 @@ export default function SequenceBuilder({
     return matchesSearch && matchesCategory && notInSequence;
   });
 
-  const categories = [...new Set(allMovements.map(m => m.category))];
+  const categories = Array.from(new Set(allMovements.map(m => m.category)));
 
   const estimatedDuration = Math.ceil(sequence.length * 4.5); // Rough estimate
   const highRiskCount = movements.filter(m => m.precautionLevel === 'High').length;
