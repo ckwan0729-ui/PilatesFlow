@@ -1,15 +1,6 @@
 import { useState, useEffect } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Class, Movement } from "@shared/schema";
-      title: formData.title,
-      startTime: startDateTime.toISOString(),
-      endTime: endDateTime.toISOString(),
-      description: formData.description || "",
-      maxParticipants: formData.maxParticipants ? parseInt(formData.maxParticipants) : 0,
-      isRecurring: formData.isRecurring ? 1 : 0,
-      recurrencePattern: formData.recurrencePattern || "none",
-      recurrenceDays: formData.recurrenceDays || [],
-      recurrenceEndDate: formData.recurrenceEndDate ? new Date(formData.recurrenceEndDate).toISOString() : null,rom "@shared/schema";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";

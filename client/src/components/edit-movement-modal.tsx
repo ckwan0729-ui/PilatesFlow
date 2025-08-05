@@ -21,6 +21,17 @@ export default function EditMovementModal({ movement, isOpen, onClose }: EditMov
   const [newTag, setNewTag] = useState("");
   const queryClient = useQueryClient();
 
+  const addTag = () => {
+    const normalizedTag = newTag.trim().toLowerCase();
+    if (normalizedTag && !movementData.tags?.map(tag => tag.toLowerCase()).includes(normalizedTag)) {
+      setMovementData({
+        ...movementData,
+        tags: [...(movementData.tags || []), newTag],
+      });
+      setNewTag("");
+    }
+  };
+
   const updateMutation = useMutation({
     mutationFn: async (updatedMovement: Movement) => {
       const response = await fetch(`/api/movements/${movement.id}`, {
@@ -30,28 +41,40 @@ export default function EditMovementModal({ movement, isOpen, onClose }: EditMov
         },
         body: JSON.stringify(updatedMovement),
       });
-      if (!response.ok) throw new Error("Failed to update movement");
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.message || "Failed to update movement");
+      }
       return response.json();
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/movements"] });
       onClose();
     },
+    onError: (error: any) => {
+      alert(error.message || "An unexpected error occurred.");
+    },
   });
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    updateMutation.mutate(movementData);
-  };
 
-  const addTag = () => {
-    if (newTag && !movementData.tags?.includes(newTag)) {
-      setMovementData({
-        ...movementData,
-        tags: [...(movementData.tags || []), newTag],
-      });
-      setNewTag("");
+    if (!movementData.name.trim()) {
+      alert("Name is required.");
+      return;
     }
+
+    if (!movementData.category) {
+      alert("Category is required.");
+      return;
+    }
+
+    if (!movementData.level) {
+      alert("Level is required.");
+      return;
+    }
+
+    updateMutation.mutate(movementData);
   };
 
   const removeTag = (tagToRemove: string) => {
@@ -59,6 +82,11 @@ export default function EditMovementModal({ movement, isOpen, onClose }: EditMov
       ...movementData,
       tags: movementData.tags?.filter(tag => tag !== tagToRemove) || [],
     });
+  };
+
+  const handlePrecautionsChange = (value: string) => {
+    const precautionsArray = value.split("\n");
+    setMovementData({ ...movementData, precautions: precautionsArray });
   };
 
   return (
@@ -134,8 +162,8 @@ export default function EditMovementModal({ movement, isOpen, onClose }: EditMov
             <Label htmlFor="precautions">Precautions</Label>
             <Textarea
               id="precautions"
-              value={movementData.precautions || ""}
-              onChange={(e) => setMovementData({...movementData, precautions: e.target.value})}
+              value={(movementData.precautions || []).join("\n")}
+              onChange={(e) => handlePrecautionsChange(e.target.value)}
               rows={2}
               placeholder="List any precautions or contraindications"
             />
@@ -165,7 +193,12 @@ export default function EditMovementModal({ movement, isOpen, onClose }: EditMov
             </div>
             <div className="flex flex-wrap gap-2">
               {movementData.tags?.map((tag, index) => (
-                <Badge key={index} variant="secondary" className="flex items-center gap-1">
+                <Badge
+                  key={index}
+                  variant="secondary"
+                  className="flex items-center gap-1"
+                  aria-label={`Tag: ${tag}`}
+                >
                   {tag}
                   <button
                     type="button"

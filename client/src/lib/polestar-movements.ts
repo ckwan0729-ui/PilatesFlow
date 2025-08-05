@@ -1,5 +1,13 @@
 import { Movement } from "@shared/schema";
 
+// Define an enum for precaution levels for better type safety
+export enum PrecautionLevel {
+  Low = "low",
+  Medium = "medium",
+  High = "high",
+}
+
+// Update the movements data with consistent precautions and tags
 export const polestarPilatesReformerMovements: Partial<Movement>[] = [
   {
     name: "Footwork - Toes",
@@ -9,7 +17,7 @@ export const polestarPilatesReformerMovements: Partial<Movement>[] = [
     benefits: ["Improves foot and ankle strength", "Enhances circulation", "Promotes proper alignment"],
     precautions: ["Ankle injuries", "Severe bunions"],
     tags: ["footwork", "beginner", "warm-up"],
-    precautionLevel: "low",
+    precautionLevel: PrecautionLevel.Low,
   },
   {
     name: "Footwork - Arches",
@@ -19,7 +27,7 @@ export const polestarPilatesReformerMovements: Partial<Movement>[] = [
     benefits: ["Strengthens arch muscles", "Improves foot alignment"],
     precautions: ["Plantar fasciitis", "Severe flat feet"],
     tags: ["footwork", "beginner", "warm-up"],
-    precautionLevel: "low",
+    precautionLevel: PrecautionLevel.Low,
   },
   {
     name: "Footwork - Heels",
@@ -29,7 +37,7 @@ export const polestarPilatesReformerMovements: Partial<Movement>[] = [
     benefits: ["Strengthens calves", "Strengthens Achilles tendon", "Improves ankle flexibility"],
     precautions: ["Achilles tendonitis", "Severe ankle instability"],
     tags: ["footwork", "beginner", "warm-up"],
-    precautionLevel: "low",
+    precautionLevel: PrecautionLevel.Low,
   },
   {
     name: "Hundred",
@@ -39,7 +47,7 @@ export const polestarPilatesReformerMovements: Partial<Movement>[] = [
     benefits: ["Strengthens core", "Improves breath coordination", "Increases endurance"],
     precautions: ["Neck issues", "High blood pressure", "Pregnancy"],
     tags: ["core", "breathing", "warm-up"],
-    precautionLevel: "medium",
+    precautionLevel: PrecautionLevel.Medium,
   },
   {
     name: "Short Box Series - Round Back",
@@ -49,7 +57,7 @@ export const polestarPilatesReformerMovements: Partial<Movement>[] = [
     benefits: ["Improves spinal flexibility", "Strengthens abdominals", "Enhances body awareness"],
     precautions: ["Acute back pain", "Osteoporosis"],
     tags: ["flexibility", "spine", "core"],
-    precautionLevel: "medium",
+    precautionLevel: PrecautionLevel.Medium,
   },
   {
     name: "Long Stretch",
@@ -59,7 +67,7 @@ export const polestarPilatesReformerMovements: Partial<Movement>[] = [
     benefits: ["Full body strengthening", "Core stability", "Shoulder girdle integration"],
     precautions: ["Wrist issues", "Shoulder injuries", "Lower back problems"],
     tags: ["full-body", "advanced", "strength"],
-    precautionLevel: "high",
+    precautionLevel: PrecautionLevel.High,
   },
   {
     name: "Eve's Lunge",
@@ -69,7 +77,7 @@ export const polestarPilatesReformerMovements: Partial<Movement>[] = [
     benefits: ["Hip flexor stretch", "Leg alignment", "Balance training"],
     precautions: ["Knee problems", "Hip replacements"],
     tags: ["stretch", "balance", "alignment"],
-    precautionLevel: "medium",
+    precautionLevel: PrecautionLevel.Medium,
   },
   {
     name: "Front Splits",
@@ -79,7 +87,7 @@ export const polestarPilatesReformerMovements: Partial<Movement>[] = [
     benefits: ["Improves flexibility", "Lengthens hamstrings", "Lengthens hip flexors"],
     precautions: ["Hamstring injuries", "Hip issues"],
     tags: ["flexibility", "advanced", "stretch"],
-    precautionLevel: "high",
+    precautionLevel: PrecautionLevel.High,
   },
   {
     name: "Knee Stretches",
@@ -89,7 +97,7 @@ export const polestarPilatesReformerMovements: Partial<Movement>[] = [
     benefits: ["Core stability", "Shoulder strength", "Spinal alignment"],
     precautions: ["Knee problems", "Wrist issues"],
     tags: ["core", "alignment", "strength"],
-    precautionLevel: "medium",
+    precautionLevel: PrecautionLevel.Medium,
   },
   {
     name: "Arms - Pulling Straps",
@@ -99,8 +107,8 @@ export const polestarPilatesReformerMovements: Partial<Movement>[] = [
     benefits: ["Upper body strength", "Shoulder stability", "Arm coordination"],
     precautions: ["Shoulder injuries", "Neck problems"],
     tags: ["upper-body", "strength", "coordination"],
-    precautionLevel: "low",
-  }
+    precautionLevel: PrecautionLevel.Low,
+  },
 ];
 
 export default polestarPilatesReformerMovements;
