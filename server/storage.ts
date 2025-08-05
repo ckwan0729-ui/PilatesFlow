@@ -127,7 +127,9 @@ export class MemStorage implements IStorage {
     const updated = { 
       ...existing, 
       ...classData,
-      sequence: classData.sequence ? (classData.sequence as string[]) : existing.sequence
+      sequence: classData.sequence ? (classData.sequence as string[]) : existing.sequence,
+      maxParticipants: existing.maxParticipants ?? null,
+      date: existing.date ?? null, // Ensure `date` is always defined or null
     };
     this.classes.set(id, updated);
     return updated;

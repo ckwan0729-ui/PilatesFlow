@@ -29,7 +29,7 @@ export default function SaveTemplateModal({ isOpen, onClose, sourceClass }: Save
     name: "",
     description: "",
     level: sourceClass?.level || "",
-    duration: sourceClass?.duration || 60,
+    duration: sourceClass?.duration ?? 60,
     sequence: sourceClass?.sequence || [],
     tags: []
   });
@@ -57,7 +57,7 @@ export default function SaveTemplateModal({ isOpen, onClose, sourceClass }: Save
       name: "",
       description: "",
       level: sourceClass?.level || "",
-      duration: sourceClass?.duration || 60,
+      duration: sourceClass?.duration ?? 60,
       sequence: sourceClass?.sequence || [],
       tags: []
     });
