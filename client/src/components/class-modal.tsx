@@ -150,18 +150,18 @@ export default function ClassModal({ isOpen, onClose, classData, templateData, o
     const endDateTime = new Date(`${formData.date}T${formData.endTime}`);
     
     const newClassData = {
-      title: formData.title,
-      startTime: startDateTime.toISOString(),
-      endTime: endDateTime.toISOString(),
-      description: formData.description || "",
-      maxParticipants: parseInt(formData.maxParticipants) || 0,
+      title: formData.title.trim(),
+      startTime: startDateTime,
+      endTime: endDateTime,
+      description: formData.description?.trim() || null,
+      maxParticipants: formData.maxParticipants ? parseInt(formData.maxParticipants) : null,
       isRecurring: formData.isRecurring ? 1 : 0,
-      recurrencePattern: formData.isRecurring ? formData.recurrencePattern : "none",
-      recurrenceDays: formData.recurrenceDays || [],
-      recurrenceEndDate: formData.recurrenceEndDate ? new Date(formData.recurrenceEndDate).toISOString() : null,
+      recurrencePattern: formData.isRecurring ? formData.recurrencePattern : null,
+      recurrenceDays: formData.isRecurring ? formData.recurrenceDays : [],
+      recurrenceEndDate: formData.recurrenceEndDate ? new Date(formData.recurrenceEndDate) : null,
       level: formData.level,
       category: formData.category,
-      roomLocation: formData.roomLocation,
+      roomLocation: formData.roomLocation?.trim() || null,
       equipment: formData.equipment,
       sequence: formData.sequence
     };
