@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogPortal } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { X, TriangleAlert, Plus, Edit, Heart, AlertTriangle, Zap } from "lucide-react";
@@ -30,8 +30,9 @@ export default function MovementDetailModal({ movement, isOpen, onClose }: Movem
   return (
     <>
       <Dialog open={isOpen} onOpenChange={onClose}>
-        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
-          <DialogHeader>
+        <DialogPortal>
+          <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+            <DialogHeader>
             <DialogTitle className="text-xl font-bold ios-gray-dark flex items-center justify-between">
               <span>{movement.name}</span>
               <div className="flex items-center space-x-2">
