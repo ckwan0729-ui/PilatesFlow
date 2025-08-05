@@ -2,176 +2,189 @@ import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
-import { Dumbbell, Plus, ChevronLeft, ChevronRight } from "lucide-react";
+import { 
+  Dumbbell, 
+  Plus, 
+  ChevronLeft, 
+  ChevronRight,
+  Calendar as CalendarIcon,
+  List,
+  Grid,
+  Table2
+} from "lucide-react";
+import { format, startOfToday, addMonths, subMonths } from "date-fns";
 import CalendarGrid from "@/components/calendar-grid";
+import WeekView from "@/components/week-view";
 import ClassModal from "@/components/class-modal";
 import SaveTemplateModal from "@/components/save-template-modal";
 import TemplateSelectionModal from "@/components/template-selection-modal";
+import type { Template } from "@shared/schema";
 import { Class } from "@shared/schema";
 
 export default function CalendarPage() {
-  const [currentDate, setCurrentDate] = useState(new Date());
+  const [currentDate, setCurrentDate] = useState(startOfToday());
   const [selectedClass, setSelectedClass] = useState<Class | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [showTemplateModal, setShowTemplateModal] = useState(false);
   const [showTemplateSelection, setShowTemplateSelection] = useState(false);
   const [templateForNewClass, setTemplateForNewClass] = useState<any>(null);
+  const [viewMode, setViewMode] = useState<"month" | "week" | "list">("month");
 
   const { data: classes = [], isLoading } = useQuery<Class[]>({
     queryKey: ["/api/classes"],
   });
 
   const navigateMonth = (direction: "prev" | "next") => {
-    setCurrentDate(prev => {
-      const newDate = new Date(prev);
-      if (direction === "prev") {
-        newDate.setMonth(prev.getMonth() - 1);
-      } else {
-        newDate.setMonth(prev.getMonth() + 1);
-      }
-      return newDate;
-    });
+    setCurrentDate(current => 
+      direction === "prev" ? subMonths(current, 1) : addMonths(current, 1)
+    );
   };
 
-  const handleCreateClass = () => {
+  const goToToday = () => {
+    setCurrentDate(startOfToday());
+  };
+
+  const openNewClassModal = () => {
     setSelectedClass(null);
-    setTemplateForNewClass(null);
+    setIsModalOpen(true);
+  };
+
+  const openTemplateSelection = () => {
     setShowTemplateSelection(true);
   };
 
-  const handleCreateFromTemplate = (template: any) => {
-    if (template) {
-      setTemplateForNewClass(template);
-    } else {
-      setTemplateForNewClass(null);
-    }
-    setSelectedClass(null);
-    setIsModalOpen(true);
-    setShowTemplateSelection(false);
-  };
-
-  const handleCreateFromScratch = () => {
-    setTemplateForNewClass(null);
-    setSelectedClass(null);
-    setIsModalOpen(true);
-    setShowTemplateSelection(false);
-  };
-
-  const handleEditClass = (classData: Class) => {
+  const handleClassClick = (classData: Class) => {
     setSelectedClass(classData);
-    setTemplateForNewClass(null);
     setIsModalOpen(true);
   };
 
   const handleSaveAsTemplate = (classData: Class) => {
-    setSelectedClass(classData);
+    setTemplateForNewClass(classData);
     setShowTemplateModal(true);
   };
 
-  const monthYear = currentDate.toLocaleDateString('en-US', { 
-    month: 'long', 
-    year: 'numeric' 
-  });
-
-  if (isLoading) {
-    return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
-      </div>
-    );
-  }
-
   return (
-    <div className="max-w-7xl mx-auto bg-white min-h-screen">
-      {/* Header */}
-      <header className="bg-white border-b border-gray-200 px-6 py-4 sticky top-0 z-40">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center space-x-4">
-            <h1 className="text-3xl font-bold text-ios-gray-dark">Pilates Studio</h1>
-            <div className="text-sm ios-gray">Class Organizer</div>
-          </div>
+    <div className="container mx-auto py-6 px-4">
+      <div className="flex justify-between items-center mb-6">
+        <div className="flex items-center gap-2">
+          <Button
+            variant="outline"
+            onClick={goToToday}
+            className="px-3"
+          >
+            Today
+          </Button>
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => navigateMonth("prev")}
+          >
+            <ChevronLeft className="h-4 w-4" />
+          </Button>
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => navigateMonth("next")}
+          >
+            <ChevronRight className="h-4 w-4" />
+          </Button>
+          <h2 className="text-2xl font-semibold ml-2">
+            {format(currentDate, "MMMM yyyy")}
+          </h2>
           
-          <div className="flex items-center space-x-3">
-            <Link href="/movements">
-              <Button variant="ghost" className="ios-blue font-semibold">
-                <Dumbbell className="w-4 h-4 mr-2" />
-                Movements
-              </Button>
-            </Link>
-            <Button onClick={handleCreateClass} className="bg-ios-blue hover:bg-blue-600">
-              <Plus className="w-4 h-4 mr-2" />
-              New Class
+          <div className="ml-6 flex items-center border rounded-md">
+            <Button
+              variant={viewMode === "month" ? "subtle" : "ghost"}
+              size="sm"
+              className="px-3"
+              onClick={() => setViewMode("month")}
+            >
+              <Grid className="w-4 h-4 mr-1" />
+              Month
+            </Button>
+            <Button
+              variant={viewMode === "week" ? "subtle" : "ghost"}
+              size="sm"
+              className="px-3"
+              onClick={() => setViewMode("week")}
+            >
+              <Table2 className="w-4 h-4 mr-1" />
+              Week
+            </Button>
+            <Button
+              variant={viewMode === "list" ? "subtle" : "ghost"}
+              size="sm"
+              className="px-3"
+              onClick={() => setViewMode("list")}
+            >
+              <List className="w-4 h-4 mr-1" />
+              List
             </Button>
           </div>
         </div>
-      </header>
 
-      {/* Calendar View */}
-      <div className="p-6">
-        {/* Calendar Header */}
-        <div className="flex items-center justify-between mb-6">
-          <div className="flex items-center space-x-4">
-            <Button 
-              variant="ghost" 
-              size="sm"
-              onClick={() => navigateMonth("prev")}
-              className="p-2 hover:bg-ios-gray-light"
-            >
-              <ChevronLeft className="w-5 h-5 ios-blue" />
+        <div className="flex items-center gap-2">
+          <Link href="/movements" className="hover:opacity-80">
+            <Button variant="outline">
+              <Dumbbell className="w-4 h-4 mr-2" />
+              Movements
             </Button>
-            <h2 className="text-2xl font-bold ios-gray-dark">{monthYear}</h2>
-            <Button 
-              variant="ghost" 
-              size="sm"
-              onClick={() => navigateMonth("next")}
-              className="p-2 hover:bg-ios-gray-light"
-            >
-              <ChevronRight className="w-5 h-5 ios-blue" />
-            </Button>
-          </div>
-          
-          <div className="flex items-center space-x-2">
-            <Button 
-              variant="outline" 
-              size="sm"
-              onClick={() => setCurrentDate(new Date())}
-              className="ios-blue border-ios-blue hover:bg-ios-blue hover:text-white"
-            >
-              Today
-            </Button>
-            <div className="flex bg-ios-gray-light rounded-lg p-1">
-              <Button size="sm" className="bg-white ios-gray-dark shadow-sm">Month</Button>
-              <Button variant="ghost" size="sm" className="ios-gray">Week</Button>
-              <Button variant="ghost" size="sm" className="ios-gray">Day</Button>
-            </div>
-          </div>
+          </Link>
+          <Button onClick={openTemplateSelection} variant="outline">
+            Use Template
+          </Button>
+          <Button onClick={openNewClassModal}>
+            <Plus className="w-4 h-4 mr-2" />
+            New Class
+          </Button>
         </div>
-
-        <CalendarGrid 
-          currentDate={currentDate}
-          classes={classes}
-          onClassClick={handleEditClass}
-        />
       </div>
 
+      {/* Calendar Views */}
+      <div className="bg-white shadow rounded-lg">
+        {viewMode === "month" && (
+          <CalendarGrid
+            currentDate={currentDate}
+            classes={classes}
+            onClassClick={handleClassClick}
+          />
+        )}
+        {viewMode === "week" && (
+          <WeekView
+            currentDate={currentDate}
+            classes={classes}
+            onClassClick={handleClassClick}
+          />
+        )}
+        {viewMode === "list" && (
+          <div className="p-4">
+            <p className="text-gray-500 text-center">List view coming soon...</p>
+          </div>
+        )}
+      </div>
+
+      {/* Modals */}
       <ClassModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         classData={selectedClass}
-        templateData={templateForNewClass}
         onSaveAsTemplate={handleSaveAsTemplate}
-      />
-
-      <TemplateSelectionModal
-        isOpen={showTemplateSelection}
-        onClose={() => setShowTemplateSelection(false)}
-        onSelectTemplate={handleCreateFromTemplate}
       />
 
       <SaveTemplateModal
         isOpen={showTemplateModal}
         onClose={() => setShowTemplateModal(false)}
-        sourceClass={selectedClass}
+        classData={templateForNewClass}
+      />
+
+      <TemplateSelectionModal
+        isOpen={showTemplateSelection}
+        onClose={() => setShowTemplateSelection(false)}
+        onSelect={(template) => {
+          setTemplateForNewClass(template);
+          setShowTemplateSelection(false);
+          setIsModalOpen(true);
+        }}
       />
     </div>
   );
