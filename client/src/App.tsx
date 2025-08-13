@@ -3,7 +3,6 @@ import { queryClient } from "./lib/queryClient";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
-import * as DialogPrimitive from "@radix-ui/react-dialog";
 import CalendarPage from "@/pages/calendar";
 import MovementsPage from "@/pages/movements";
 import NotFound from "@/pages/not-found";
@@ -22,10 +21,8 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
-        <DialogPrimitive.DialogProvider>
-          <Toaster />
-          <Router />
-        </DialogPrimitive.DialogProvider>
+        <Toaster />
+        <Router />
       </TooltipProvider>
     </QueryClientProvider>
   );

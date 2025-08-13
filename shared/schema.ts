@@ -28,21 +28,10 @@ export const movements = pgTable("movements", {
 export const classes = pgTable("classes", {
   id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
   title: text("title").notNull(),
-  startTime: timestamp("start_time").notNull(),
-  endTime: timestamp("end_time").notNull(),
-  description: text("description"),
-  maxParticipants: integer("max_participants"),
-  // Recurrence fields
-  isRecurring: integer("is_recurring").default(0),
-  recurrencePattern: text("recurrence_pattern"), // weekly, monthly, etc.
-  recurrenceDays: integer("recurrence_days").array(), // [1,3,5] for Mon,Wed,Fri
-  recurrenceEndDate: timestamp("recurrence_end_date"),
-  // Class details
-  instructorId: varchar("instructor_id"),
+  date: text("date").notNull(),
+  startTime: text("start_time").notNull(),
+  duration: integer("duration").notNull(),
   level: text("level").notNull(),
-  category: text("category").default("Regular"),
-  roomLocation: text("room_location"),
-  equipment: text("equipment").array(),
   notes: text("notes"),
   sequence: jsonb("sequence").$type<string[]>(),
   createdAt: timestamp("created_at").defaultNow(),
@@ -77,14 +66,6 @@ export const insertTemplateSchema = createInsertSchema(templates).omit({
 export type InsertMovement = z.infer<typeof insertMovementSchema>;
 export type Movement = typeof movements.$inferSelect;
 export type InsertClass = z.infer<typeof insertClassSchema>;
-export type Class = typeof classes.$inferSelect & {
-  maxParticipants: number | null; // Ensure `maxParticipants` is always defined or null
-};
+export type Class = typeof classes.$inferSelect;
 export type InsertTemplate = z.infer<typeof insertTemplateSchema>;
 export type Template = typeof templates.$inferSelect;
-
-// Rename the extended type to avoid conflicts.
-export type ExtendedClass = typeof classes.$inferSelect & {
-  maxParticipants?: number | null; // Ensure `maxParticipants` is optional and nullable
-  date?: string | null; // Ensure `date` is optional and nullable
-};

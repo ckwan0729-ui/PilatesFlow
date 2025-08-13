@@ -35,10 +35,10 @@ export default function MovementsPage() {
     return matchesSearch && matchesCategory && matchesLevel && matchesPrecaution && matchesTag;
   });
 
-  const categories = Array.from(new Set(movements.map(m => m.category)));
-  const levels = Array.from(new Set(movements.map(m => m.level)));
-  const precautionLevels = Array.from(new Set(movements.map(m => m.precautionLevel)));
-  const allTags = Array.from(new Set(movements.flatMap(m => m.tags || []))).sort();
+  const categories = [...new Set(movements.map(m => m.category))];
+  const levels = [...new Set(movements.map(m => m.level))];
+  const precautionLevels = [...new Set(movements.map(m => m.precautionLevel))];
+  const allTags = [...new Set(movements.flatMap(m => m.tags || []))].sort();
 
   if (isLoading) {
     return (

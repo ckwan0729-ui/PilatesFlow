@@ -110,11 +110,7 @@ export class MemStorage implements IStorage {
       id, 
       createdAt: new Date(),
       notes: classData.notes || null,
-      sequence: (classData.sequence || []) as string[],
-      // Ensure `category` and `description` are always defined or null.
-      category: classData.category || null,
-      description: classData.description || null,
-      equipment: classData.equipment || null, // Ensure `equipment` is always defined or null
+      sequence: (classData.sequence || []) as string[]
     };
     this.classes.set(id, newClass);
     return newClass;
@@ -127,9 +123,7 @@ export class MemStorage implements IStorage {
     const updated = { 
       ...existing, 
       ...classData,
-      sequence: classData.sequence ? (classData.sequence as string[]) : existing.sequence,
-      maxParticipants: existing.maxParticipants ?? null,
-      date: existing.date ?? null, // Ensure `date` is always defined or null
+      sequence: classData.sequence ? (classData.sequence as string[]) : existing.sequence
     };
     this.classes.set(id, updated);
     return updated;
@@ -159,9 +153,7 @@ export class MemStorage implements IStorage {
       id, 
       createdAt: new Date(),
       sequence: (template.sequence || []) as string[],
-      tags: template.tags || [],
-      // Ensure `description` is always defined or null.
-      description: template.description || null,
+      tags: template.tags || []
     };
     this.templates.set(id, newTemplate);
     return newTemplate;
