@@ -343,33 +343,6 @@ export const sampleMovements: Omit<Movement, 'id' | 'isPolestar'>[] = [
     breathingPattern: "Exhale on pulling, inhale on return"
   },
 
-  {
-  name: "Elephant",
-  category: "Core & Lower Body",
-  level: "Intermediate",
-  description: "Hamstring stretch and core stabilization exercise performed on the Reformer.",
-  instructions: [
-    "Stand on carriage with hands on footbar, hips high",
-    "Press carriage out using abdominal control, keeping legs straight",
-    "Return slowly to start position",
-    "Keep spine long and shoulders away from ears"
-  ],
-  precautions: [
-    "Do not hyperextend lower back",
-    "Keep shoulders engaged",
-    "Avoid if hamstring strain exists"
-  ],
-  precautionLevel: "Moderate",
-  duration: "2-3 minutes",
-  thumbnailUrl: "https://images.unsplash.com/photo-1605285829836-2d0a9b2f1a2b?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=250",
-  tags: ["hamstrings", "core", "spinal-stability", "standing"],
-  benefits: ["Strengthens core", "Stretches hamstrings", "Improves posture"],
-  contraindications: ["Hamstring tear", "Lower back pain", "Shoulder injury"],
-  modifications: ["Bend knees slightly", "Use lighter springs", "Shorten range of motion"],
-  equipment: ["Reformer", "Footbar", "Medium springs"],
-  muscleGroups: ["Hamstrings", "Glutes", "Core", "Shoulders"],
-  breathingPattern: "Exhale to press out, inhale to return"
-},
 {
   name: "Short Box – Round Back",
   category: "Core",
@@ -828,6 +801,5 @@ export const sampleMovements: Omit<Movement, 'id' | 'isPolestar'>[] = [
   muscleGroups: ["Rhomboids", "Trapezius", "Posterior deltoids", "Biceps"],
   breathingPattern: "Exhale to pull, inhale to return"
 }
-
 
 ];
