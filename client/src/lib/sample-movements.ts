@@ -582,6 +582,251 @@ export const sampleMovements: Omit<Movement, 'id' | 'isPolestar'>[] = [
   equipment: ["Reformer", "Footbar", "Light springs"],
   muscleGroups: ["Obliques", "Spinal rotators", "Abdominals"],
   breathingPattern: "Exhale to twist, inhale to return"
+},
+{
+  name: "Mermaid Stretch",
+  category: "Flexibility",
+  level: "Beginner",
+  description: "Seated side stretch that opens the spine and improves lateral flexibility.",
+  instructions: [
+    "Sit sideways on the carriage, knees bent with feet under body",
+    "Place one hand on footbar, other arm overhead",
+    "Reach over the head while keeping spine long",
+    "Return to upright and switch sides"
+  ],
+  precautions: [
+    "Keep hips grounded",
+    "Avoid overextending the spine",
+    "Do not force stretch if experiencing pain"
+  ],
+  precautionLevel: "Low",
+  duration: "2-3 minutes",
+  thumbnailUrl: "https://images.unsplash.com/photo-1594737625785-3c9175a5932b?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=250",
+  tags: ["flexibility", "spinal-mobility", "side-stretch", "seated"],
+  benefits: [
+    "Increases lateral flexibility",
+    "Improves spinal mobility",
+    "Relieves tension in ribcage and waist"
+  ],
+  contraindications: ["Recent spinal surgery", "Acute side or hip pain"],
+  modifications: [
+    "Shorten range of motion",
+    "Use lighter spring tension",
+    "Support arm on pillow if needed"
+  ],
+  equipment: ["Reformer carriage", "Footbar", "Light springs"],
+  muscleGroups: ["Obliques", "Spinal extensors", "Latissimus dorsi"],
+  breathingPattern: "Inhale to prepare, exhale to reach over"
+},
+{
+  name: "Back Rowing – From the Chest",
+  category: "Upper Body",
+  level: "Intermediate",
+  description: "Strengthens the back and improves posture using arm and scapular control.",
+  instructions: [
+    "Sit tall on carriage with feet against footbar, knees slightly bent",
+    "Hold straps at chest level with elbows wide",
+    "Draw elbows back, squeezing shoulder blades together",
+    "Return to start with control"
+  ],
+  precautions: [
+    "Avoid shrugging shoulders",
+    "Keep spine neutral",
+    "Do not overextend elbows"
+  ],
+  precautionLevel: "Moderate",
+  duration: "3-4 minutes",
+  thumbnailUrl: "https://images.unsplash.com/photo-1594737625785-3c9175a5932b?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=250",
+  tags: ["upper-body", "back-strength", "scapular-stability", "rowing"],
+  benefits: [
+    "Strengthens upper back muscles",
+    "Improves shoulder stability",
+    "Enhances posture and spinal alignment"
+  ],
+  contraindications: ["Acute shoulder injury", "Recent rotator cuff surgery"],
+  modifications: [
+    "Use lighter springs",
+    "Reduce range of motion",
+    "Perform one arm at a time for control"
+  ],
+  equipment: ["Reformer", "Arm straps", "Medium springs"],
+  muscleGroups: ["Rhomboids", "Trapezius", "Posterior deltoids", "Biceps"],
+  breathingPattern: "Exhale to pull, inhale to return"
+},
+{
+  name: "Knee Stretches – Round Back",
+  category: "Core & Lower Body",
+  level: "Beginner",
+  description: "Seated movement that mobilizes the spine while strengthening abdominals and legs.",
+  instructions: [
+    "Kneel on carriage, hands on footbar",
+    "Round spine forward, draw knees toward chest",
+    "Press carriage out keeping spine rounded",
+    "Return knees toward chest with control"
+  ],
+  precautions: [
+    "Keep shoulders relaxed",
+    "Do not collapse through lower back",
+    "Avoid if wrist pain exists"
+  ],
+  precautionLevel: "Low",
+  duration: "3-5 minutes",
+  thumbnailUrl: "https://images.unsplash.com/photo-1605285829836-2d0a9b2f1a2b?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=250",
+  tags: ["core", "spinal-mobility", "kneeling", "lower-body"],
+  benefits: [
+    "Strengthens core and hip flexors",
+    "Improves spinal articulation",
+    "Enhances posture and coordination"
+  ],
+  contraindications: ["Knee or wrist injuries", "Acute back pain"],
+  modifications: ["Use cushion under knees", "Reduce spring tension", "Smaller range of motion"],
+  equipment: ["Reformer carriage", "Footbar", "Light springs"],
+  muscleGroups: ["Rectus abdominis", "Obliques", "Quadriceps", "Spinal extensors"],
+  breathingPattern: "Exhale to press out, inhale to return"
+},
+{
+  name: "Knee Stretches – Flat Back",
+  category: "Core & Lower Body",
+  level: "Beginner",
+  description: "Variation of knee stretches with a neutral spine to strengthen abdominals and legs.",
+  instructions: [
+    "Kneel on carriage with hands on footbar",
+    "Keep spine long and neutral",
+    "Press carriage out by straightening knees slightly",
+    "Return to start with control"
+  ],
+  precautions: [
+    "Do not overarch lower back",
+    "Keep shoulders stable",
+    "Avoid if wrist pain present"
+  ],
+  precautionLevel: "Low",
+  duration: "3-5 minutes",
+  thumbnailUrl: "https://images.unsplash.com/photo-1605285829836-2d0a9b2f1a2b?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=250",
+  tags: ["core", "spinal-stability", "kneeling", "lower-body"],
+  benefits: [
+    "Strengthens core and legs",
+    "Maintains spinal neutrality",
+    "Enhances coordination and control"
+  ],
+  contraindications: ["Knee or wrist injuries", "Acute back pain"],
+  modifications: ["Cushion under knees", "Reduce spring tension", "Smaller range of motion"],
+  equipment: ["Reformer carriage", "Footbar", "Light springs"],
+  muscleGroups: ["Rectus abdominis", "Obliques", "Quadriceps", "Spinal stabilizers"],
+  breathingPattern: "Exhale to press out, inhale to return"
+},
+{
+  name: "Long Back Stretch",
+  category: "Full Body",
+  level: "Intermediate",
+  description: "Plank-based exercise that strengthens the core and stretches the spine.",
+  instructions: [
+    "Place hands on footbar, feet on carriage",
+    "Press carriage out keeping body in straight line",
+    "Return slowly maintaining control",
+    "Focus on keeping shoulders away from ears"
+  ],
+  precautions: [
+    "Maintain neutral spine",
+    "Do not collapse hips",
+    "Avoid if wrist or shoulder pain present"
+  ],
+  precautionLevel: "Moderate",
+  duration: "2-3 minutes",
+  thumbnailUrl: "https://images.unsplash.com/photo-1610237890237-7c5e7cdebe8d?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=250",
+  tags: ["plank", "core", "full-body", "spinal-stability"],
+  benefits: [
+    "Strengthens core and shoulders",
+    "Improves posture",
+    "Develops spinal stability"
+  ],
+  contraindications: ["Wrist injuries", "Shoulder impingement", "Lower back pain"],
+  modifications: ["Hands on higher surface", "Knees down variation", "Reduce range of motion"],
+  equipment: ["Reformer", "Footbar", "Medium springs"],
+  muscleGroups: ["Core", "Shoulders", "Spinal stabilizers", "Glutes"],
+  breathingPattern: "Exhale to press out, inhale to return"
+},
+{
+  name: "Tendon Stretch",
+  category: "Lower Body",
+  level: "Advanced",
+  description: "Challenging hamstring and ankle stretch performed from plank position on the reformer.",
+  instructions: [
+    "Start in plank with toes on footbar, hands on carriage",
+    "Press heels toward carriage while keeping hips high",
+    "Return to plank position with control",
+    "Repeat for multiple reps focusing on lengthening hamstrings"
+  ],
+  precautions: [
+    "Do not let lower back sag",
+    "Keep shoulders engaged",
+    "Avoid if hamstring strain exists"
+  ],
+  precautionLevel: "High",
+  duration: "2-3 minutes",
+  thumbnailUrl: "https://images.unsplash.com/photo-1622035562820-5de5ed98f0a7?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=250",
+  tags: ["hamstrings", "ankles", "plank", "stretch"],
+  benefits: ["Lengthens hamstrings", "Strengthens posterior chain", "Improves ankle mobility"],
+  contraindications: ["Hamstring tear", "Lower back pain", "Shoulder injury"],
+  modifications: ["Reduce range of motion", "Use lighter spring", "Bend knees slightly"],
+  equipment: ["Reformer", "Footbar", "Medium springs"],
+  muscleGroups: ["Hamstrings", "Calves", "Glutes", "Core"],
+  breathingPattern: "Exhale to stretch, inhale to return"
+},
+{
+  name: "Arm Circles",
+  category: "Upper Body",
+  level: "Beginner",
+  description: "Sitting exercise to strengthen shoulders and arms while stabilizing the core.",
+  instructions: [
+    "Sit tall on carriage holding straps",
+    "Extend arms forward",
+    "Make small controlled circles in the air",
+    "Reverse direction after several reps"
+  ],
+  precautions: [
+    "Do not shrug shoulders",
+    "Maintain upright spine",
+    "Avoid if shoulder pain exists"
+  ],
+  precautionLevel: "Low",
+  duration: "2-3 minutes",
+  thumbnailUrl: "https://images.unsplash.com/photo-1622035562820-5de5ed98f0a7?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=250",
+  tags: ["shoulders", "arms", "upper-body", "stability"],
+  benefits: ["Strengthens deltoids and arms", "Improves shoulder mobility", "Enhances core stability"],
+  contraindications: ["Shoulder injury", "Rotator cuff issues"],
+  modifications: ["Smaller circles", "Lighter springs", "Support back against carriage"],
+  equipment: ["Reformer", "Arm straps", "Light springs"],
+  muscleGroups: ["Deltoids", "Biceps", "Triceps", "Core stabilizers"],
+  breathingPattern: "Exhale to circle, inhale to return"
+},
+{
+  name: "Pulling Straps – High Row",
+  category: "Upper Body",
+  level: "Intermediate",
+  description: "Strengthens upper back, shoulders, and arms while engaging core for stability.",
+  instructions: [
+    "Sit tall on carriage holding straps",
+    "Pull straps toward chest with elbows wide",
+    "Return slowly to start position",
+    "Keep shoulders down and spine neutral"
+  ],
+  precautions: [
+    "Avoid shrugging shoulders",
+    "Do not lean backward excessively",
+    "Modify range for shoulder discomfort"
+  ],
+  precautionLevel: "Moderate",
+  duration: "3-4 minutes",
+  thumbnailUrl: "https://images.unsplash.com/photo-1622035562820-5de5ed98f0a7?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&h=250",
+  tags: ["upper-body", "back-strength", "posture", "rowing"],
+  benefits: ["Strengthens upper back", "Improves shoulder stability", "Enhances posture"],
+  contraindications: ["Shoulder injuries", "Rotator cuff issues"],
+  modifications: ["Reduce range of motion", "Lighter springs", "One arm at a time"],
+  equipment: ["Reformer", "Arm straps", "Medium springs"],
+  muscleGroups: ["Rhomboids", "Trapezius", "Posterior deltoids", "Biceps"],
+  breathingPattern: "Exhale to pull, inhale to return"
 }
+
 
 ];
