@@ -23,7 +23,7 @@ interface ClassModalProps {
 export default function ClassModal({ isOpen, onClose, classData, templateData, onSaveAsTemplate }: ClassModalProps) {
   const { toast } = useToast();
   const queryClient = useQueryClient();
-  
+
   const [formData, setFormData] = useState({
     title: "",
     date: "",
@@ -112,7 +112,7 @@ export default function ClassModal({ isOpen, onClose, classData, templateData, o
       toast({ title: "Please enter a class title", variant: "destructive" });
       return;
     }
-    
+
     if (classData) {
       updateMutation.mutate(formData);
     } else {
@@ -122,7 +122,7 @@ export default function ClassModal({ isOpen, onClose, classData, templateData, o
 
   const handleCopyClass = () => {
     if (!classData) return;
-    
+
     const newClassData = {
       title: `${formData.title} (Copy)`,
       date: new Date().toISOString().split('T')[0],
@@ -132,7 +132,7 @@ export default function ClassModal({ isOpen, onClose, classData, templateData, o
       notes: formData.notes,
       sequence: formData.sequence
     };
-    
+
     // Create the copy immediately
     createMutation.mutate(newClassData);
     toast({ title: "Class copied successfully!" });
@@ -140,7 +140,7 @@ export default function ClassModal({ isOpen, onClose, classData, templateData, o
 
   const handleSaveAsTemplate = () => {
     if (!classData || !onSaveAsTemplate) return;
-    
+
     // Create a class object with current form data
     const currentClassData = {
       ...classData,
@@ -150,33 +150,33 @@ export default function ClassModal({ isOpen, onClose, classData, templateData, o
       notes: formData.notes,
       sequence: formData.sequence
     };
-    
+
     onSaveAsTemplate(currentClassData);
   };
 
   const formatDateTime = () => {
     if (!formData.date || !formData.startTime) return "Select date and time";
-    
+
     const date = new Date(formData.date);
     const dateStr = date.toLocaleDateString('en-US', { 
       year: 'numeric', 
       month: 'long', 
       day: 'numeric' 
     });
-    
+
     const [hours, minutes] = formData.startTime.split(':');
     const hour = parseInt(hours);
     const ampm = hour >= 12 ? 'PM' : 'AM';
     const displayHour = hour % 12 || 12;
     const timeStr = `${displayHour}:${minutes} ${ampm}`;
-    
+
     const endTime = new Date();
     endTime.setHours(hour, parseInt(minutes) + formData.duration);
     const endHour = endTime.getHours();
     const endAmpm = endHour >= 12 ? 'PM' : 'AM';
     const endDisplayHour = endHour % 12 || 12;
     const endTimeStr = `${endDisplayHour}:${endTime.getMinutes().toString().padStart(2, '0')} ${endAmpm}`;
-    
+
     return `${dateStr} • ${timeStr} - ${endTimeStr}`;
   };
 
@@ -184,9 +184,9 @@ export default function ClassModal({ isOpen, onClose, classData, templateData, o
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-6xl max-h-[90vh] overflow-hidden">
+      <DialogContent className="max-w-7xl w-[95vw] max-h-[95vh] h-[95vh] overflow-hidden flex flex-col">
         {/* Modal Header */}
-        <DialogHeader>
+        <DialogHeader className="flex-shrink-0">
           <div className="flex items-center justify-between">
             <div>
               <DialogTitle className="text-xl font-bold ios-gray-dark">
@@ -221,102 +221,109 @@ export default function ClassModal({ isOpen, onClose, classData, templateData, o
           </div>
         </DialogHeader>
 
-        {/* Modal Content */}
-        <div className="flex h-[600px] gap-6">
-          {/* Class Details (Left Panel) */}
-          <div className="w-1/3 border-r border-gray-200 pr-6 overflow-y-auto">
-            <h4 className="font-semibold ios-gray-dark mb-4">Class Details</h4>
-            
-            <form onSubmit={handleSubmit} className="space-y-4">
-              <div>
-                <Label htmlFor="title">Class Title</Label>
-                <Input
-                  id="title"
-                  value={formData.title}
-                  onChange={(e) => setFormData({...formData, title: e.target.value})}
-                  placeholder="Enter class title"
-                />
-              </div>
-              
-              <div className="grid grid-cols-2 gap-3">
+        {/* Modal Content - Now uses flex-1 to fill remaining space */}
+        <div className="flex flex-1 gap-6 min-h-0">
+          {/* Class Details (Left Panel) - Fixed width with internal scrolling */}
+          <div className="w-80 flex-shrink-0 border-r border-gray-200 pr-6 flex flex-col">
+            <h4 className="font-semibold ios-gray-dark mb-4 flex-shrink-0">Class Details</h4>
+
+            <div className="flex-1 overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
+              <form onSubmit={handleSubmit} className="space-y-4">
                 <div>
-                  <Label htmlFor="date">Date</Label>
+                  <Label htmlFor="title">Class Title</Label>
                   <Input
-                    id="date"
-                    type="date"
-                    value={formData.date}
-                    onChange={(e) => setFormData({...formData, date: e.target.value})}
+                    id="title"
+                    value={formData.title}
+                    onChange={(e) => setFormData({...formData, title: e.target.value})}
+                    placeholder="Enter class title"
                   />
                 </div>
+
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <Label htmlFor="date">Date</Label>
+                    <Input
+                      id="date"
+                      type="date"
+                      value={formData.date}
+                      onChange={(e) => setFormData({...formData, date: e.target.value})}
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="startTime">Start Time</Label>
+                    <Input
+                      id="startTime"
+                      type="time"
+                      value={formData.startTime}
+                      onChange={(e) => setFormData({...formData, startTime: e.target.value})}
+                    />
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <Label htmlFor="duration">Duration</Label>
+                    <Select 
+                      value={formData.duration.toString()} 
+                      onValueChange={(value) => setFormData({...formData, duration: parseInt(value)})}
+                    >
+                      <SelectTrigger>
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="45">45 minutes</SelectItem>
+                        <SelectItem value="60">60 minutes</SelectItem>
+                        <SelectItem value="90">90 minutes</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div>
+                    <Label htmlFor="level">Level</Label>
+                    <Select 
+                      value={formData.level} 
+                      onValueChange={(value) => setFormData({...formData, level: value})}
+                    >
+                      <SelectTrigger>
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="All Levels">All Levels</SelectItem>
+                        <SelectItem value="Beginner">Beginner</SelectItem>
+                        <SelectItem value="Intermediate">Intermediate</SelectItem>
+                        <SelectItem value="Advanced">Advanced</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </div>
+
                 <div>
-                  <Label htmlFor="startTime">Start Time</Label>
-                  <Input
-                    id="startTime"
-                    type="time"
-                    value={formData.startTime}
-                    onChange={(e) => setFormData({...formData, startTime: e.target.value})}
+                  <Label htmlFor="notes">Notes</Label>
+                  <Textarea
+                    id="notes"
+                    value={formData.notes}
+                    onChange={(e) => setFormData({...formData, notes: e.target.value})}
+                    placeholder="Class notes and modifications..."
+                    rows={4}
+                    className="resize-none"
                   />
                 </div>
-              </div>
-              
-              <div className="grid grid-cols-2 gap-3">
-                <div>
-                  <Label htmlFor="duration">Duration</Label>
-                  <Select 
-                    value={formData.duration.toString()} 
-                    onValueChange={(value) => setFormData({...formData, duration: parseInt(value)})}
-                  >
-                    <SelectTrigger>
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="45">45 minutes</SelectItem>
-                      <SelectItem value="60">60 minutes</SelectItem>
-                      <SelectItem value="90">90 minutes</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-                <div>
-                  <Label htmlFor="level">Level</Label>
-                  <Select 
-                    value={formData.level} 
-                    onValueChange={(value) => setFormData({...formData, level: value})}
-                  >
-                    <SelectTrigger>
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="All Levels">All Levels</SelectItem>
-                      <SelectItem value="Beginner">Beginner</SelectItem>
-                      <SelectItem value="Intermediate">Intermediate</SelectItem>
-                      <SelectItem value="Advanced">Advanced</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-              </div>
-              
-              <div>
-                <Label htmlFor="notes">Notes</Label>
-                <Textarea
-                  id="notes"
-                  value={formData.notes}
-                  onChange={(e) => setFormData({...formData, notes: e.target.value})}
-                  placeholder="Class notes and modifications..."
-                  rows={3}
-                  className="resize-none"
-                />
-              </div>
-            </form>
+              </form>
+            </div>
           </div>
 
-          {/* Movement Sequence (Right Panel) */}
-          <div className="flex-1 overflow-y-auto">
-            <SequenceBuilder
-              sequence={formData.sequence}
-              movements={sequenceMovements}
-              allMovements={movements}
-              onSequenceChange={(newSequence) => setFormData({...formData, sequence: newSequence})}
-            />
+          {/* Movement Sequence (Right Panel) - Auto-fit with scrolling */}
+          <div className="flex-1 flex flex-col min-w-0">
+            <h4 className="font-semibold ios-gray-dark mb-4 flex-shrink-0">Movement Sequence</h4>
+            <div className="flex-1 overflow-hidden">
+              <div className="h-full overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
+                <SequenceBuilder
+                  sequence={formData.sequence}
+                  movements={sequenceMovements}
+                  allMovements={movements}
+                  onSequenceChange={(newSequence) => setFormData({...formData, sequence: newSequence})}
+                />
+              </div>
+            </div>
           </div>
         </div>
       </DialogContent>
