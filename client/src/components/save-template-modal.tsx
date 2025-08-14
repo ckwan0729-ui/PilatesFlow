@@ -104,7 +104,7 @@ export default function SaveTemplateModal({ isOpen, onClose, sourceClass }: Save
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-2xl">
+      <DialogContent className="w-auto h-auto max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle className="text-xl font-bold ios-gray-dark">
             Save as Template
